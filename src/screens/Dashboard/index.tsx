@@ -1,12 +1,11 @@
 import React from "react";
-import { Text, StatusBar } from "react-native";
 
 import { HighlightCard } from "../../components/HighlightCard";
 import {
   TransactionCard,
   TransactionCardProps,
 } from "../../components/TransactionCard";
-import themes from "../../global/styles/themes";
+
 import {
   Container,
   Header,
@@ -57,10 +56,6 @@ export function Dashboard() {
 
   return (
     <Container>
-      <StatusBar
-        barStyle={"dark-content"}
-        backgroundColor={themes.colors.primary}
-      />
       <Header>
         <UserWrapper>
           <UserInfo>
