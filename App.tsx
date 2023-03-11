@@ -9,8 +9,13 @@ import {
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 
-import { Dashboard } from "./src/screens/Dashboard/index";
+import { NavigationContainer } from "@react-navigation/native";
+import { AppRoutes } from "./src/routes/app.routes";
+import { CategorySelect } from "./src/screens/CategorySelect";
+import { Register } from "./src/screens/Register";
 import theme from "./src/global/styles/themes";
+import { StatusBar } from "react-native";
+import themes from "./src/global/styles/themes";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -39,7 +44,13 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Dashboard />
+      <NavigationContainer>
+        <StatusBar
+          barStyle={"dark-content"}
+          backgroundColor={themes.colors.primary}
+        />
+        <AppRoutes />
+      </NavigationContainer>
     </ThemeProvider>
   );
 }
