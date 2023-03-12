@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect } from "react";
+import "react-native-gesture-handler";
 import { ThemeProvider } from "styled-components";
 import * as SplashScreen from "expo-splash-screen";
 import font from "expo-font";
