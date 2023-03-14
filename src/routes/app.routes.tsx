@@ -7,7 +7,13 @@ import { Dashboard } from "../screens/Dashboard";
 import { Register } from "../screens/Register";
 import theme from "../global/styles/themes";
 
-const { Navigator, Screen } = createBottomTabNavigator();
+export type AppRoutesParamList = {
+  Listagem: undefined; // <- undefined = rota não requer parâmetros.
+  Cadastrar: undefined;
+  Resumo: undefined;
+};
+
+const { Navigator, Screen } = createBottomTabNavigator<AppRoutesParamList>();
 
 export function AppRoutes() {
   return (
@@ -46,7 +52,7 @@ export function AppRoutes() {
         }}
       />
       <Screen
-        name="resume"
+        name="Resumo"
         component={Register}
         options={{
           tabBarIcon: ({ size, color }) => (
