@@ -1,9 +1,9 @@
 import "intl";
 import "intl/locale-data/jsonp/pt-BR";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { ThemeProvider } from "styled-components";
 import * as SplashScreen from "expo-splash-screen";
-import font from "expo-font";
+
 import {
   useFonts,
   Poppins_400Regular,
@@ -13,9 +13,7 @@ import {
 
 import { NavigationContainer } from "@react-navigation/native";
 import { AppRoutes } from "./src/routes/app.routes";
-import { CategorySelect } from "./src/screens/CategorySelect";
-import { Register } from "./src/screens/Register";
-import theme from "./src/global/styles/themes";
+
 import { StatusBar } from "react-native";
 import themes from "./src/global/styles/themes";
 
@@ -45,7 +43,7 @@ export default function App() {
   if (!fontsLoaded) return null;
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={themes}>
       <NavigationContainer>
         <StatusBar
           barStyle={"dark-content"}

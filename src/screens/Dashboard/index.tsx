@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HighlightCard } from "../../components/HighlightCard";
+import { useTheme } from "styled-components";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   TransactionCard,
@@ -22,6 +24,7 @@ import {
   Title,
   TransactionList,
   LogoutButton,
+  LoadContainer,
 } from "./styles";
 
 export interface DataListProps extends TransactionCardProps {
@@ -30,6 +33,7 @@ export interface DataListProps extends TransactionCardProps {
 
 interface HighlightProps {
   amount: string;
+  lastTransaction: string;
 }
 
 interface HighlightData {
@@ -40,9 +44,33 @@ interface HighlightData {
 
 export function Dashboard() {
   const [transactions, setTransactions] = useState<DataListProps[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [highlightData, setHighlightData] = useState<HighlightData>(
     {} as HighlightData
   );
+  const theme = useTheme();
+
+  function getLastTransactionDate(
+    collection: DataListProps[],
+    type: "positive" | "negative"
+  ) {
+    const lastTransaction = new Date(
+      Math.max.apply(
+        Math,
+        collection
+          .filter((transaction: DataListProps) => transaction.type === type)
+          .map((transaction: DataListProps) =>
+            new Date(transaction.date).getTime()
+          )
+      )
+    );
+    return `${lastTransaction.getDate()} de ${lastTransaction.toLocaleString(
+      "pt-BR",
+      {
+        month: "long",
+      }
+    )}`;
+  }
 
   async function loadTransactions() {
     const dataKey = "@gofinances:transaction";
@@ -82,6 +110,18 @@ export function Dashboard() {
     );
 
     setTransactions(transactionFormatted);
+
+    const lastTransactionEntries = getLastTransactionDate(
+      transactions,
+      "positive"
+    );
+    const lastTransactionExpansives = getLastTransactionDate(
+      transactions,
+      "negative"
+    );
+
+    const totalInterval = `01 á ${lastTransactionExpansives}`;
+
     const total = entriesTotal - expensivesTotal;
 
     setHighlightData({
@@ -90,20 +130,25 @@ export function Dashboard() {
           currency: "BRL",
           style: "currency",
         }),
+        lastTransaction: `Ùltima entrada dia ${lastTransactionEntries}`,
       },
       expensives: {
         amount: expensivesTotal.toLocaleString("pt-BR", {
           currency: "BRL",
           style: "currency",
         }),
+        lastTransaction: `Ùltima saída dia ${lastTransactionExpansives}`,
       },
       total: {
         amount: total.toLocaleString("pt-BR", {
           currency: "BRL",
           style: "currency",
         }),
+        lastTransaction: totalInterval,
       },
     });
+
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -117,53 +162,61 @@ export function Dashboard() {
   );
   return (
     <Container>
-      <Header>
-        <UserWrapper>
-          <UserInfo>
-            <UserPhoto
-              source={{ uri: "https://github.com/Erivaldo-Montes.png" }}
+      {isLoading ? (
+        <LoadContainer>
+          <ActivityIndicator color={theme.colors.primary} size="large" />
+        </LoadContainer>
+      ) : (
+        <>
+          <Header>
+            <UserWrapper>
+              <UserInfo>
+                <UserPhoto
+                  source={{ uri: "https://github.com/Erivaldo-Montes.png" }}
+                />
+
+                <User>
+                  <UserGretting>Olá,</UserGretting>
+                  <UserName>Erivaldo</UserName>
+                </User>
+              </UserInfo>
+              <LogoutButton onPress={() => {}}>
+                <Icon name="power" />
+              </LogoutButton>
+            </UserWrapper>
+          </Header>
+
+          <HighlightCards>
+            <HighlightCard
+              type="up"
+              title="entrada"
+              amount={highlightData.entries.amount}
+              lastTransaction={highlightData.entries.lastTransaction}
             />
+            <HighlightCard
+              type="down"
+              title="saida"
+              amount={highlightData.expensives.amount}
+              lastTransaction={highlightData.expensives.lastTransaction}
+            />
+            <HighlightCard
+              type="total"
+              title="total"
+              amount={highlightData.total.amount}
+              lastTransaction={highlightData.total.lastTransaction}
+            />
+          </HighlightCards>
+          <Transactions>
+            <Title>Listagem</Title>
 
-            <User>
-              <UserGretting>Olá,</UserGretting>
-              <UserName>Erivaldo</UserName>
-            </User>
-          </UserInfo>
-          <LogoutButton onPress={() => {}}>
-            <Icon name="power" />
-          </LogoutButton>
-        </UserWrapper>
-      </Header>
-
-      <HighlightCards>
-        <HighlightCard
-          type="up"
-          title="entrada"
-          amount={highlightData.entries.amount}
-          lastTransaction="Ùltima entrada dia 13 de março"
-        />
-        <HighlightCard
-          type="down"
-          title="saida"
-          amount={highlightData.expensives.amount}
-          lastTransaction="Ùltima saida dia 13 de março"
-        />
-        <HighlightCard
-          type="total"
-          title="total"
-          amount={highlightData.total.amount}
-          lastTransaction="de 1 á 6 de março"
-        />
-      </HighlightCards>
-      <Transactions>
-        <Title>Listagem</Title>
-
-        <TransactionList
-          data={transactions}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <TransactionCard data={item} />}
-        />
-      </Transactions>
+            <TransactionList
+              data={transactions}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => <TransactionCard data={item} />}
+            />
+          </Transactions>
+        </>
+      )}
     </Container>
   );
 }

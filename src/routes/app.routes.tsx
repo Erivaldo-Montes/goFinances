@@ -5,6 +5,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 import { Dashboard } from "../screens/Dashboard";
 import { Register } from "../screens/Register";
+import { Resume } from "../screens/Resume";
 import theme from "../global/styles/themes";
 
 export type AppRoutesParamList = {
@@ -53,7 +54,7 @@ export function AppRoutes() {
       />
       <Screen
         name="Resumo"
-        component={Register}
+        component={Resume}
         options={{
           tabBarIcon: ({ size, color }) => (
             <MaterialIcons name="pie-chart" color={color} size={size} />
