@@ -18,6 +18,7 @@ import { StatusBar } from "react-native";
 import themes from "./src/global/styles/themes";
 
 import { SignIn } from "./src/screens/SignIn";
+import { AuthProvider } from "./src/hooks/auth";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -51,8 +52,9 @@ export default function App() {
           barStyle={"light-content"}
           backgroundColor={themes.colors.primary}
         />
-        <SignIn />
-        
+        <AuthProvider>
+          <SignIn />
+        </AuthProvider>
       </NavigationContainer>
     </ThemeProvider>
   );
