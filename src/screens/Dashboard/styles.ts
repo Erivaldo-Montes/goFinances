@@ -62,7 +62,7 @@ export const UserName = styled.Text`
   font-family: ${(props) => props.theme.fonts.bold};
 `;
 
-export const LogoutButton = styled(BorderlessButton)``;
+export const LogoutButton = styled.TouchableOpacity``;
 
 export const Icon = styled(Feather)`
   color: ${(props) => props.theme.colors.secundary};

@@ -4,11 +4,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-
+import { InputFrom } from "../../components/form/InputFrom";
+import { Button } from "../../components/form/Button";
+import { TransactionTypeButton } from "../../components/form/TransactionTypeButton";
+import { CategorySelectButton } from "../../components/form/CategorySelectButton";
+import { CategorySelect } from "../CategorySelect";
+import { AppRoutesParamList } from "../../routes/app.routes";
+import { useAuth } from "../../hooks/auth";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import uuid from "react-native-uuid";
-
 import {
   Container,
   Header,
@@ -17,12 +22,6 @@ import {
   Fields,
   TransactionsTypes,
 } from "./styles";
-import { InputFrom } from "../../components/form/InputFrom";
-import { Button } from "../../components/form/Button";
-import { TransactionTypeButton } from "../../components/form/TransactionTypeButton";
-import { CategorySelectButton } from "../../components/form/CategorySelectButton";
-import { CategorySelect } from "../CategorySelect";
-import { AppRoutesParamList } from "../../routes/app.routes";
 
 interface FormData {
   name: string;
@@ -49,6 +48,7 @@ export function Register() {
     key: "category",
     name: "categoria",
   });
+  const { user } = useAuth();
 
   const navigation = useNavigation<RegisterNavigationProps>();
 
@@ -90,7 +90,7 @@ export function Register() {
     };
 
     try {
-      const dataKey = "@gofinances:transaction";
+      const dataKey = `@gofinances:transaction_user:${user.id}`;
       const data = await AsyncStorage.getItem(dataKey);
       const currentData = data ? JSON.parse(data) : [];
 
@@ -133,7 +133,7 @@ export function Register() {
               name="amount"
               placeholder="preço"
               keyboardType="numeric"
-              error={errors.amount && errors.amount.message}
+              error={errors.amount && String(errors.amount.message)}
             />
 
             <TransactionsTypes>
