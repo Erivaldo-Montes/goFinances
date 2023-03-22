@@ -12,7 +12,9 @@ import {
 } from "@expo-google-fonts/poppins";
 
 import { Routes } from "./src/routes";
+import { Routes } from "./src/routes";
 
+import { AuthProvider, useAuth } from "./src/hooks/auth";
 import { AuthProvider, useAuth } from "./src/hooks/auth";
 import { StatusBar } from "react-native";
 import themes from "./src/global/styles/themes";
@@ -23,6 +25,7 @@ export default function App() {
     Poppins_500Medium,
     Poppins_700Bold,
   });
+  const { userStorageLoading } = useAuth();
   const { userStorageLoading } = useAuth();
 
   useEffect(() => {
@@ -42,9 +45,17 @@ export default function App() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded || userStorageLoading) return null;
+  if (!fontsLoaded || userStorageLoading) return null;
 
   return (
     <ThemeProvider theme={themes}>
+      <StatusBar
+        barStyle={"light-content"}
+        backgroundColor={themes.colors.primary}
+      />
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
       <StatusBar
         barStyle={"light-content"}
         backgroundColor={themes.colors.primary}
