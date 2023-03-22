@@ -11,13 +11,11 @@ import {
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 
-import { NavigationContainer } from "@react-navigation/native";
-import { AppRoutes } from "./src/routes/app.routes";
+import { Routes } from "./src/routes";
 
+import { AuthProvider, useAuth } from "./src/hooks/auth";
 import { StatusBar } from "react-native";
 import themes from "./src/global/styles/themes";
-
-import { SignIn } from "./src/screens/SignIn";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -25,6 +23,7 @@ export default function App() {
     Poppins_500Medium,
     Poppins_700Bold,
   });
+  const { userStorageLoading } = useAuth();
 
   useEffect(() => {
     const showSplashScreen = async () => {
@@ -42,18 +41,17 @@ export default function App() {
     if (fontsLoaded) hideSplashScreen();
   }, [fontsLoaded]);
 
-  if (!fontsLoaded) return null;
+  if (!fontsLoaded || userStorageLoading) return null;
 
   return (
     <ThemeProvider theme={themes}>
-      <NavigationContainer>
-        <StatusBar
-          barStyle={"light-content"}
-          backgroundColor={themes.colors.primary}
-        />
-        <SignIn />
-        
-      </NavigationContainer>
+      <StatusBar
+        barStyle={"light-content"}
+        backgroundColor={themes.colors.primary}
+      />
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
     </ThemeProvider>
   );
 }
