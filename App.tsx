@@ -23,7 +23,7 @@ export default function App() {
     Poppins_500Medium,
     Poppins_700Bold,
   });
-  const { userStorageLoading } = useAuth();
+
   const { userStorageLoading } = useAuth();
 
   useEffect(() => {
@@ -43,17 +43,9 @@ export default function App() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded || userStorageLoading) return null;
-  if (!fontsLoaded || userStorageLoading) return null;
 
   return (
     <ThemeProvider theme={themes}>
-      <StatusBar
-        barStyle={"light-content"}
-        backgroundColor={themes.colors.primary}
-      />
-      <AuthProvider>
-        <Routes />
-      </AuthProvider>
       <StatusBar
         barStyle={"light-content"}
         backgroundColor={themes.colors.primary}
