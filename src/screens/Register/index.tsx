@@ -69,7 +69,9 @@ export function Register() {
     setCategoryModelOpen(false);
   }
   function handleOpenSelectCategoryModal() {
-    setCategoryModelOpen(true);
+    setTimeout(() => {
+      setCategoryModelOpen(true);
+    }, 1000);
   }
 
   async function handleRegister(form: FormData) {
@@ -152,6 +154,7 @@ export function Register() {
             </TransactionsTypes>
 
             <CategorySelectButton
+              testID="button-category"
               title={category.name}
               onPress={handleOpenSelectCategoryModal}
             />
@@ -160,7 +163,7 @@ export function Register() {
           <Button title="Enviar" onPress={handleSubmit(handleRegister)} />
         </Form>
 
-        <Modal visible={categoryModalOpen}>
+        <Modal visible={categoryModalOpen} testID="modal-category">
           <CategorySelect
             category={category}
             closeSelectCategory={handleCloseSelectCategory}
