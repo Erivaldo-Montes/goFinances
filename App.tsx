@@ -1,8 +1,9 @@
+import React from "react";
 import "intl";
 import "intl/locale-data/jsonp/pt-BR";
-import React, { useEffect } from "react";
 import { ThemeProvider } from "styled-components";
-import * as SplashScreen from "expo-splash-screen";
+
+import AppLoading from "expo-app-loading";
 
 import {
   useFonts,
@@ -25,24 +26,9 @@ export default function App() {
   });
 
   const { userStorageLoading } = useAuth();
-
-  useEffect(() => {
-    const showSplashScreen = async () => {
-      await SplashScreen.preventAutoHideAsync();
-    };
-
-    showSplashScreen();
-  }, []);
-
-  useEffect(() => {
-    const hideSplashScreen = async () => {
-      await SplashScreen.hideAsync();
-    };
-
-    if (fontsLoaded) hideSplashScreen();
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded || userStorageLoading) return null;
+  if (!fontsLoaded || userStorageLoading) {
+    return <AppLoading />;
+  }
 
   return (
     <ThemeProvider theme={themes}>
